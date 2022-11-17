@@ -15,7 +15,7 @@ export class PostsService {
 
   private readonly logger = new Logger(PostsService.name);
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async handleCron() {
     this.logger.debug('Called every 30 seconds');
     const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
@@ -48,18 +48,33 @@ export class PostsService {
         title: title,
         url: url,
         author: e.author,
+        tags: e._tags,
       };
     });
 
+    // console.log(mapa);
     await this.create(mapa);
   }
 
   async create(data) {
-    console.log(data);
+    // console.log(data);
 
-    const id_new_post = await this.userModel.bulkCreate(data);
-    console.log(`new post id: ${id_new_post}`);
-    return id_new_post;
+    data.forEach(async (e) => {
+      const post = await this.userModel.create({
+        title: e.title,
+        url: e.url,
+        author: e.author,
+      });
+
+      // const post_id: number = post.dataValues.id;
+
+      // e._tags.forEach(async (e) => {
+      //   await this.tagModel.create({
+      //     tag: e,
+      //     post_id: post_id,
+      //   });
+      // });
+    });
   }
 
   async findAll(): Promise<Post[]> {
