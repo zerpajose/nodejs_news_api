@@ -60,25 +60,26 @@ export class PostsService {
   }
 
   async create(data) {
-    // console.log(data);
+    try {
+      data.forEach(async (e) => {
+        const post = await this.userModel.create({
+          title: e.title,
+          url: e.url,
+          author: e.author,
+        });
 
-    data.forEach(async (e) => {
-      const post = await this.userModel.create({
-        title: e.title,
-        url: e.url,
-        author: e.author,
-      });
+        const post_id: number = post.dataValues.id;
 
-      const post_id: number = post.dataValues.id;
-
-      e.tags.forEach(async (e) => {
-        console.log(post_id);
-        await this.tagModel.create({
-          tag: e,
-          post_id: post_id,
+        e.tags.forEach(async (e) => {
+          await this.tagModel.create({
+            tag: e,
+            post_id: post_id,
+          });
         });
       });
-    });
+    } catch (error) {
+      console.log(`Error: ${error}`);
+    }
   }
 
   async findAll(): Promise<Post[]> {

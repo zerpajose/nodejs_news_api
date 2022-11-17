@@ -20,6 +20,8 @@ CREATE TABLE "Tags" (
 	id SERIAL NOT NULL,
 	tag VARCHAR(256) NOT NULL,
 	post_id INT NOT NULL,
+	"createdAt" timestamp with time zone DEFAULT now(),
+	"updatedAt" timestamp with time zone DEFAULT now(),
 	PRIMARY KEY (id),
 	FOREIGN KEY (post_id) REFERENCES "Posts"(id)
 );

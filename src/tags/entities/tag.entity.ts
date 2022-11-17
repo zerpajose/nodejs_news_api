@@ -7,4 +7,10 @@ export class Tag extends Model {
 
   @Column(DataType.INTEGER)
   post_id: number;
+
+  @Column(DataType.DATE)
+  createdAt: Date;
+
+  @Column(DataType.DATE)
+  updatedAt: Date;
 }

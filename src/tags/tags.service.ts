@@ -1,11 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTagDto } from './dto/create-tag.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { TagDto } from './dto/tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
+import { Tag } from './entities/tag.entity';
 
 @Injectable()
 export class TagsService {
-  create(createTagDto: CreateTagDto) {
-    return 'This action adds a new tag';
+  constructor(
+    @InjectModel(Tag)
+    private tagModel: typeof Tag,
+  ) {}
+
+  async create(tagDto: TagDto) {
+    return await this.tagModel.create({
+      tag: tagDto.tag,
+      post_id: tagDto.post_id,
+    });
   }
 
   findAll() {
