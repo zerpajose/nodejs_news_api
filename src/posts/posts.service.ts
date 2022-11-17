@@ -4,12 +4,15 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Post } from './entities/post.entity';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
+import { Tag } from 'src/tags/entities/tag.entity';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post)
     private userModel: typeof Post,
+    @InjectModel(Tag)
+    private tagModel: typeof Tag,
     private readonly httpService: HttpService,
   ) {}
 
@@ -66,14 +69,15 @@ export class PostsService {
         author: e.author,
       });
 
-      // const post_id: number = post.dataValues.id;
+      const post_id: number = post.dataValues.id;
 
-      // e._tags.forEach(async (e) => {
-      //   await this.tagModel.create({
-      //     tag: e,
-      //     post_id: post_id,
-      //   });
-      // });
+      e.tags.forEach(async (e) => {
+        console.log(post_id);
+        await this.tagModel.create({
+          tag: e,
+          post_id: post_id,
+        });
+      });
     });
   }
 

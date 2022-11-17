@@ -1,19 +1,19 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table
 export class Post extends Model {
-  @Column
+  @Column(DataType.STRING)
   title: string;
 
-  @Column
+  @Column(DataType.STRING)
   url: string;
 
-  @Column
+  @Column(DataType.STRING)
   author: string;
 
-  @Column
+  @Column(DataType.DATE)
   createdAt: Date;
 
-  @Column
+  @Column(DataType.DATE)
   updatedAt: Date;
 }

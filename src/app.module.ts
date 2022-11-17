@@ -5,6 +5,8 @@ import { PostsModule } from './posts/posts.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from './posts/entities/post.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { TagsModule } from './tags/tags.module';
+import { Tag } from './tags/entities/tag.entity';
 
 @Module({
   imports: [
@@ -16,9 +18,10 @@ import { ScheduleModule } from '@nestjs/schedule';
       username: 'postgres',
       password: '1a11aaaa',
       database: 'posts',
-      models: [Post],
+      models: [Post, Tag],
     }),
     PostsModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
