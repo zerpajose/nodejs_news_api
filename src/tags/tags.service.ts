@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { TagDto } from './dto/tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
 import { Tag } from './entities/tag.entity';
 
 @Injectable()
@@ -24,10 +23,6 @@ export class TagsService {
 
   findOne(id: number) {
     return `This action returns a #${id} tag`;
-  }
-
-  update(id: number, updateTagDto: UpdateTagDto) {
-    return `This action updates a #${id} tag`;
   }
 
   remove(id: number) {

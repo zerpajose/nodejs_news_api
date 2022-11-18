@@ -15,6 +15,11 @@ export class PostsController {
     return this.postsService.pagination(query.page);
   }
 
+  @Get('filter') // http://localhost:3000/posts/filter?author=summm
+  async filter(@Query() query) {
+    return this.postsService.filter(query);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.findOne(+id);

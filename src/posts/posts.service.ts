@@ -10,7 +10,7 @@ import { Tag } from 'src/tags/entities/tag.entity';
 export class PostsService {
   constructor(
     @InjectModel(Post)
-    private userModel: typeof Post,
+    private postModel: typeof Post,
     @InjectModel(Tag)
     private tagModel: typeof Tag,
     private readonly httpService: HttpService,
@@ -18,51 +18,51 @@ export class PostsService {
 
   private readonly logger = new Logger(PostsService.name);
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
-  async handleCron() {
-    this.logger.debug('Called every 30 seconds');
-    const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
+  // @Cron(CronExpression.EVERY_30_SECONDS)
+  // async handleCron() {
+  //   this.logger.debug('Called every 30 seconds');
+  //   const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
 
-    const { data } = await firstValueFrom(
-      this.httpService.get<any>(url).pipe(
-        catchError((error) => {
-          this.logger.error(error.response.data);
-          throw 'An error happened!';
-        }),
-      ),
-    );
+  //   const { data } = await firstValueFrom(
+  //     this.httpService.get<any>(url).pipe(
+  //       catchError((error) => {
+  //         this.logger.error(error.response.data);
+  //         throw 'An error happened!';
+  //       }),
+  //     ),
+  //   );
 
-    const mapa = data.hits.map((e) => {
-      let title = 'Default Title';
-      if (e.title !== null) {
-        title = e.title;
-      } else if (e.story_title !== null) {
-        title = e.story_title;
-      }
+  //   const mapa = data.hits.map((e) => {
+  //     let title = 'Default Title';
+  //     if (e.title !== null) {
+  //       title = e.title;
+  //     } else if (e.story_title !== null) {
+  //       title = e.story_title;
+  //     }
 
-      let url = 'http://defaulturl.com';
-      if (e.url !== null) {
-        url = e.url;
-      } else if (e.story_url !== null) {
-        url = e.story_url;
-      }
+  //     let url = 'http://defaulturl.com';
+  //     if (e.url !== null) {
+  //       url = e.url;
+  //     } else if (e.story_url !== null) {
+  //       url = e.story_url;
+  //     }
 
-      return {
-        title: title,
-        url: url,
-        author: e.author,
-        tags: e._tags,
-      };
-    });
+  //     return {
+  //       title: title,
+  //       url: url,
+  //       author: e.author,
+  //       tags: e._tags,
+  //     };
+  //   });
 
-    // console.log(mapa);
-    await this.create(mapa);
-  }
+  //   // console.log(mapa);
+  //   await this.create(mapa);
+  // }
 
   async create(data) {
     try {
       data.forEach(async (e) => {
-        const post = await this.userModel.create({
+        const post = await this.postModel.create({
           title: e.title,
           url: e.url,
           author: e.author,
@@ -83,16 +83,42 @@ export class PostsService {
   }
 
   async findAll(): Promise<Post[]> {
-    return this.userModel.findAll({ limit: 5 });
+    return this.postModel.findAll({ limit: 5 });
   }
 
   async pagination(page: number) {
     const offset: number = page * 5 - 5;
-    return this.userModel.findAll({ offset: offset, limit: 5 });
+    return this.postModel.findAll({ offset: offset, limit: 5 });
+  }
+
+  async filter(query) {
+    let results;
+    if (Object.keys(query)[0] === 'author') {
+      results = this.postModel.findAll({
+        where: { author: query.author },
+      });
+    } else if (Object.keys(query)[0] === 'title') {
+      results = this.postModel.findAll({
+        where: { title: query.title },
+      });
+    } else if (Object.keys(query)[0] === 'tag') {
+      results = this.postModel.findAll({
+        attributes: ['title', 'url', 'author'],
+        include: [
+          {
+            model: Tag,
+            where: {
+              tag: query.tag,
+            },
+          },
+        ],
+      });
+    }
+    return results;
   }
 
   findOne(id: number): Promise<Post> {
-    return this.userModel.findOne({
+    return this.postModel.findOne({
       where: {
         id,
       },

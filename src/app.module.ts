@@ -19,6 +19,7 @@ import { Tag } from './tags/entities/tag.entity';
       password: '1a11aaaa',
       database: 'posts',
       models: [Post, Tag],
+      autoLoadModels: true,
     }),
     PostsModule,
     TagsModule,
