@@ -16,16 +16,4 @@ export class TagsService {
       post_id: tagDto.post_id,
     });
   }
-
-  findAll() {
-    return `This action returns all tags`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} tag`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} tag`;
-  }
 }

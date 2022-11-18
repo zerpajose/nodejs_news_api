@@ -18,7 +18,7 @@ export class PostsService {
 
   private readonly logger = new Logger(PostsService.name);
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     this.logger.debug('Called every 30 seconds');
     const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
