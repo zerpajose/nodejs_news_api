@@ -18,46 +18,46 @@ export class PostsService {
 
   private readonly logger = new Logger(PostsService.name);
 
-  // @Cron(CronExpression.EVERY_30_SECONDS)
-  // async handleCron() {
-  //   this.logger.debug('Called every 30 seconds');
-  //   const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  async handleCron() {
+    this.logger.debug('Called every 30 seconds');
+    const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
 
-  //   const { data } = await firstValueFrom(
-  //     this.httpService.get<any>(url).pipe(
-  //       catchError((error) => {
-  //         this.logger.error(error.response.data);
-  //         throw 'An error happened!';
-  //       }),
-  //     ),
-  //   );
+    const { data } = await firstValueFrom(
+      this.httpService.get<any>(url).pipe(
+        catchError((error) => {
+          this.logger.error(error.response.data);
+          throw 'An error happened!';
+        }),
+      ),
+    );
 
-  //   const mapa = data.hits.map((e) => {
-  //     let title = 'Default Title';
-  //     if (e.title !== null) {
-  //       title = e.title;
-  //     } else if (e.story_title !== null) {
-  //       title = e.story_title;
-  //     }
+    const mapa = data.hits.map((e) => {
+      let title = 'Default Title';
+      if (e.title !== null) {
+        title = e.title;
+      } else if (e.story_title !== null) {
+        title = e.story_title;
+      }
 
-  //     let url = 'http://defaulturl.com';
-  //     if (e.url !== null) {
-  //       url = e.url;
-  //     } else if (e.story_url !== null) {
-  //       url = e.story_url;
-  //     }
+      let url = 'http://defaulturl.com';
+      if (e.url !== null) {
+        url = e.url;
+      } else if (e.story_url !== null) {
+        url = e.story_url;
+      }
 
-  //     return {
-  //       title: title,
-  //       url: url,
-  //       author: e.author,
-  //       tags: e._tags,
-  //     };
-  //   });
+      return {
+        title: title,
+        url: url,
+        author: e.author,
+        tags: e._tags,
+      };
+    });
 
-  //   // console.log(mapa);
-  //   await this.create(mapa);
-  // }
+    // console.log(mapa);
+    await this.create(mapa);
+  }
 
   async create(data) {
     try {
