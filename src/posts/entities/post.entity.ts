@@ -1,5 +1,5 @@
 import { Column, DataType, Model, Table, HasMany } from 'sequelize-typescript';
-import { Tag } from 'src/tags/entities/tag.entity';
+import { Tag } from '../../tags/entities/tag.entity';
 
 @Table
 export class Post extends Model {

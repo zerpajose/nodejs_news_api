@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Post } from './entities/post.entity';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
-import { Tag } from 'src/tags/entities/tag.entity';
+import { Tag } from '../tags/entities/tag.entity';
 
 @Injectable()
 export class PostsService {
