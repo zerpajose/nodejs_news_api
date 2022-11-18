@@ -113,7 +113,13 @@ export class PostsService {
           },
         ],
       });
+    } else {
+      results = {
+        status: 404,
+        error: 'Not Found',
+      };
     }
+
     return results;
   }
 

@@ -6,6 +6,8 @@ import {
   Query,
   Body,
   Post,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
@@ -36,10 +38,28 @@ export class PostsController {
     description: 'Return a list of first 5 posts of the selected page',
   })
   async pagination(@Query('page') query: number) {
+    if (query === undefined) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Should have a parameter: page',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (Object.keys(query).length === 0) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Should have a parameter: page=numeric_value',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
     return this.postsService.pagination(query);
   }
 
-  @Get('filter') // http://localhost:3000/posts/filter?author=summm
+  @Get('filter')
   @ApiQuery({
     name: 'title',
     required: false,
@@ -60,7 +80,26 @@ export class PostsController {
     description: 'Return a list of posts of the selected filter',
   })
   async filter(@Query() query: string) {
-    return this.postsService.filter(query);
+    if (Object.keys(query).length === 0) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Should have a filter: title, author or tag',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const results = await this.postsService.filter(query);
+    if (results.length === 0) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'No Search Results',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return results;
   }
 
   @Get(':id')
@@ -83,6 +122,15 @@ export class PostsController {
     description: 'Delete the post related to the id provided',
   })
   remove(@Param('id') id: string) {
+    if (id === undefined) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Should have a parameter: id',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
     return this.postsService.remove(+id);
   }
 
