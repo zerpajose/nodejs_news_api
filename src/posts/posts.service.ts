@@ -86,8 +86,8 @@ export class PostsService {
     return this.postModel.findAll({ limit: 5 });
   }
 
-  async pagination(page: number) {
-    const offset: number = page * 5 - 5;
+  async pagination(query: number) {
+    const offset = query * 5 - 5;
     return this.postModel.findAll({ offset: offset, limit: 5 });
   }
 
