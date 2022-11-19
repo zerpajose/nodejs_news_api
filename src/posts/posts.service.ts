@@ -18,7 +18,7 @@ export class PostsService {
 
   private readonly logger = new Logger(PostsService.name);
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     this.logger.debug('Called hourly');
     const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
@@ -122,7 +122,7 @@ export class PostsService {
     return results;
   }
 
-  findOne(id: number): Promise<Post> {
+  findOne(id: number) {
     return this.postModel.findOne({
       where: {
         id,
@@ -130,8 +130,15 @@ export class PostsService {
     });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number) {
     const post = await this.findOne(id);
+    if(post === null){
+      return {
+        status: 404,
+        error: 'Not Found',
+      };
+    }
     await post.destroy();
+    return post;
   }
 }

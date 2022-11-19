@@ -12,6 +12,7 @@ import {
 import { PostsService } from './posts.service';
 import { ApiTags, ApiResponse, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { PostDto } from './dto/post.dto';
+import { clearConfigCache } from 'prettier';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -103,12 +104,33 @@ export class PostsController {
   }
 
   @Get(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'Get a Post by id',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Return a book based on a particular id',
+    description: 'Returns a Post based on a particular id',
   })
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    if (id === undefined) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Should have a parameter: id',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const post = await this.postsService.findOne(+id);
+    if(post === null){
+      return {
+        status: 404,
+        error: 'Not Found',
+      };
+    }
+    return post;
   }
 
   @Delete(':id')
