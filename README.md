@@ -11,11 +11,17 @@ The service returns paginated results with a maximum of 5 items and is able to b
 - Node
 - Postgres
 
+## Git Clone
+
+```bash
+git clone https://gitlab.com/cryptovincent/nodejs_news_api.git
+```
+
 ## Database Model
 
 Search for db.dump file in project's root folder and run:
 ```bash
-$ pg_restore -C -d postgres db.dump
+pg_restore -C -d postgres db.dump
 ```
 Also you can restore DB with pgAdmin by using ```Menu > Tools > Restore``` option selecting the dump file.
 
@@ -26,20 +32,20 @@ Create a ```.env``` file in your root folder project, then copy the configuratio
 ## Project Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+npm run start
 
 # watch mode
-$ npm run start:dev
+npm run start:dev
 
 # production mode
-$ npm run start:prod
+npm run start:prod
 ```
 ## API Documentation
 
