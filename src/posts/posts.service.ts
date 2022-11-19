@@ -18,9 +18,9 @@ export class PostsService {
 
   private readonly logger = new Logger(PostsService.name);
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async handleCron() {
-    this.logger.debug('Called every 30 seconds');
+    this.logger.debug('Called hourly');
     const url = 'https://hn.algolia.com/api/v1/search_by_date?query=nodejs';
 
     const { data } = await firstValueFrom(
@@ -55,7 +55,6 @@ export class PostsService {
       };
     });
 
-    // console.log(mapa);
     await this.create(mapa);
   }
 

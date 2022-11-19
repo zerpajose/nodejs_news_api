@@ -23,6 +23,9 @@ export class Tag extends Model {
   @Column(DataType.DATE)
   updatedAt: Date;
 
-  @BelongsTo(() => Post)
+  @BelongsTo(() => Post, {
+    foreignKey: 'post_id',
+    onDelete: 'cascade'
+  })
   post: Post;
 }

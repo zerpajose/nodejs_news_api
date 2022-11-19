@@ -18,6 +18,8 @@ export class Post extends Model {
   @Column(DataType.DATE)
   updatedAt: Date;
 
-  @HasMany(() => Tag)
+  @HasMany(() => Tag, {
+    foreignKey: 'post_id',
+  })
   tag: Tag[];
 }

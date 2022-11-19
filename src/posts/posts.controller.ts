@@ -10,7 +10,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { PostDto } from './dto/post.dto';
 
 @ApiTags('posts')
@@ -112,7 +112,7 @@ export class PostsController {
   }
 
   @Delete(':id')
-  @ApiQuery({
+  @ApiParam({
     name: 'id',
     required: true,
     description: 'Delete by id',

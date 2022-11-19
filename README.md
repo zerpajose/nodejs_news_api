@@ -13,9 +13,9 @@ The service returns paginated results with a maximum of 5 items and is able to b
 
 ## Database Model
 
-Search for db_dump.sql file in project's root folder and run:
+Search for db.dump file in project's root folder and run:
 ```bash
-$ pg_restore db_dump.sql
+$ pg_restore -C -d postgres db.dump
 ```
 Also you can restore DB with pgAdmin by using ```Menu > Tools > Restore``` option selecting the dump file.
 
